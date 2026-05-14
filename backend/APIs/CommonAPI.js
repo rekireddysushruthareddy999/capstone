@@ -81,8 +81,8 @@ commonApp.post('/users/login',async(req,res)=>{
     //store it as httpOnly token
     res.cookie("token", signedToken, {
         httpOnly: true,
-        sameSite: "lax",  
-        secure: false  
+        sameSite: "None",  
+        secure: true
     })
     let userObj=user.toObject()
     delete userObj.password
@@ -95,8 +95,8 @@ commonApp.get("/users/logout",(req,res)=>{
     //delete token from the cookie storage
     res.clearCookie("token", {
         httpOnly: true,
-        sameSite: "lax",
-        secure: false
+        sameSite: "None",
+        secure: true
     })
     res.status(200).json({message:"Logout Success."})
 })

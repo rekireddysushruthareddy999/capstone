@@ -15,6 +15,8 @@ import Unauthorized from "./components/Unauthorized.jsx";
 import AuthorList from "./components/AuthorList.jsx";
 import UserList from "./components/UserList.jsx";
 import AdminProfile from "./components/AdminProfile.jsx"
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 function App() {
   const routerObj = createBrowserRouter([
