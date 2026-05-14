@@ -47,25 +47,21 @@ function ArticleByID() {
 
     //otherwise, make api req to read that article by id
     const getArticle = async () => {
-      setLoading(true);
+  setLoading(true);
 
-      try {
-        const res = await axios.get(
-          `https://capstone-lq6s.onrender.com/user-api/article/${id}`,
-          { withCredentials: true },
-        );
+  try {
+    const res = await axios.get(`/user-api/article/${id}`);
+    console.log("Article API response:", res.data);
+    setArticle(res.data.payload);
+  } catch (err) {
+    setError(err.response?.data?.error || "Failed to load article");
+  } finally {
+    setLoading(false);
+  }
+};
 
-        setArticle(res.data.payload);
-      } catch (err) {
-        setError(err.response?.data?.error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getArticle();
-  }, [id]);
-
+getArticle();
+}, [id]);
   const formatDate = (date) => {
     return new Date(date).toLocaleString("en-IN", {
       timeZone: "Asia/Kolkata",
@@ -123,6 +119,7 @@ function ArticleByID() {
       commentObj,
       { withCredentials: true },
     );
+    console.log("Article API response:", res.data);
     if (res.status === 201) {
       toast.success(res.data.message);
       setArticle(res.data.payload);
@@ -144,7 +141,8 @@ function ArticleByID() {
 
   if (loading) return <p className={loadingClass}>Loading article...</p>;
   if (error) return <p className={errorClass}>{error}</p>;
-  if (!article) return null;
+  // if (!article) return null;
+  if (!article) return <p className={errorClass}>Article not found.</p>;
 
   return (
     <div className={articlePageWrapper}>

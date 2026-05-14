@@ -33,7 +33,7 @@ userApp.put("/articles",verifyToken("USER"),async(req,res)=>{
     res.status(201).json({message:"Comment added successfully.",payload:articleDocument})
 })
 
-userApp.get('/article/:id', verifyToken("USER","AUTHOR"), async(req,res)=>{
+userApp.get('/article/:id', async(req,res)=>{
     const article = await ArticleModel.findById(req.params.id)
         .populate("comments.user", "firstName email")
         .populate("author", "firstName")
