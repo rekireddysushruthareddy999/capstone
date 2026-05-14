@@ -11,7 +11,7 @@ function AuthorList() {
       try {
         setLoading(true);
         const res = await axios.get(
-          "${import.meta.env.VITE_API_URL}/admin-api/users/author",
+          `${import.meta.env.VITE_API_URL}/admin-api/users/author`,
           {
             withCredentials: true,
           },

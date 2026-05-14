@@ -11,7 +11,7 @@ function UserList() {
       try {
         setLoading(true);
         const res = await axios.get(
-          "${import.meta.env.VITE_API_URL}/admin-api/users/user",
+          `${import.meta.env.VITE_API_URL}/admin-api/users/user`,
           {
             withCredentials: true,
           },

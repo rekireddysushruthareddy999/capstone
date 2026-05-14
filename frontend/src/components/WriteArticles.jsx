@@ -40,7 +40,7 @@ function WriteArticles() {
       setLoading(true);
       //make POST req to save new article
       let res = await axios.post(
-        "${import.meta.env.VITE_API_URL}/author-api/articles",
+        `${import.meta.env.VITE_API_URL}/author-api/articles`,
         articleObj,
         { withCredentials: true },
       );

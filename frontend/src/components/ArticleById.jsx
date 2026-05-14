@@ -85,7 +85,7 @@ function ArticleByID() {
 
     try {
       const res = await axios.patch(
-        "${import.meta.env.VITE_API_URL}/author-api/articles",
+        `${import.meta.env.VITE_API_URL}/author-api/articles`,
         { articleId: article._id, isArticleActive: newStatus },
         { withCredentials: true },
       );
@@ -119,7 +119,7 @@ function ArticleByID() {
     commentObj.articleId = article._id;
     console.log(commentObj);
     let res = await axios.put(
-      "${import.meta.env.VITE_API_URL}/user-api/articles",
+      `${import.meta.env.VITE_API_URL}/user-api/articles`,
       commentObj,
       { withCredentials: true },
     );

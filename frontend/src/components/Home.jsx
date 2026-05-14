@@ -34,11 +34,13 @@ function Home() {
       setLoading(true);
       try {
         let res = await axios.get(
-          "${import.meta.env.VITE_API_URL}/user-api/articles",
+         `${import.meta.env.VITE_API_URL}/user-api/articles`,
           { withCredentials: true },
         );
         if (res.status === 200) {
-          setArticles(res.data.payload);
+            console.log("API response data:", res.data);
+          // setArticles(res.data.payload);
+          setArticles(res.data.payload ?? []);
         }
       } catch (err) {
         setError(err.response?.data?.error || "Something went wrong");

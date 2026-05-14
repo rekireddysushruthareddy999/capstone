@@ -18,7 +18,7 @@ export const useAuth = create((set) => ({
       });
       //make api call
       let res = await axios.post(
-        "${import.meta.env.VITE_API_URL}/common-api/users/login",
+        `${import.meta.env.VITE_API_URL}/common-api/users/login`,
         userCred,
         { withCredentials: true },
       );
@@ -50,7 +50,7 @@ export const useAuth = create((set) => ({
       //set loading state
       //make logout api req
       let res = await axios.get(
-        "${import.meta.env.VITE_API_URL}/common-api/users/logout",
+        `${import.meta.env.VITE_API_URL}/common-api/users/logout`,
         { withCredentials: true },
       );
       //update state
@@ -76,7 +76,7 @@ export const useAuth = create((set) => ({
     try {
       set({ loading: true });
       const res = await axios.get(
-        "${import.meta.env.VITE_API_URL}/common-api/check-auth",
+       `${import.meta.env.VITE_API_URL}/common-api/check-auth`,
         { withCredentials: true },
       );
 
