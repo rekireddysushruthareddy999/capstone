@@ -12,10 +12,7 @@ const app = exp()
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://capstone-seven-beta.vercel.app",
-    ],
+    origin: "https://capstone-seven-beta.vercel.app",
     credentials: true,
   })
 );
