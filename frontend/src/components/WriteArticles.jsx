@@ -36,17 +36,20 @@ function WriteArticles() {
     //add authorId to articleObj
     articleObj.author = currentUser._id;
     try {
-      //set loading true 
-      setLoading(true)
-        //make POST req to save new article
-        let res=await axios.post("http://localhost:2000/author-api/articles",articleObj,{withCredentials:true})
-        //navigate
-        if(res.status===201){
-          navigate("/author-profile/articles")
-        }
-   
+      //set loading true
+      setLoading(true);
+      //make POST req to save new article
+      let res = await axios.post(
+        "${import.meta.env.VITE_API_URL}/author-api/articles",
+        articleObj,
+        { withCredentials: true },
+      );
+      //navigate
+      if (res.status === 201) {
+        navigate("/author-profile/articles");
+      }
     } catch (err) {
-     toast.error(err.response?.data?.message || "Failed to publish article");
+      toast.error(err.response?.data?.message || "Failed to publish article");
     } finally {
       setLoading(false);
     }
@@ -88,15 +91,17 @@ function WriteArticles() {
             })}
           >
             <option value="">Select category</option>
-<option value="technology">Technology</option>
-<option value="programming">Programming</option>
-<option value="ai">AI</option>
-<option value="web-development">Web Development</option>
-<option value="philosophy">Philosophy</option>
-<option value="thrillers">Thrillers</option>
+            <option value="technology">Technology</option>
+            <option value="programming">Programming</option>
+            <option value="ai">AI</option>
+            <option value="web-development">Web Development</option>
+            <option value="philosophy">Philosophy</option>
+            <option value="thrillers">Thrillers</option>
           </select>
 
-          {errors.category && <p className={errorClass}>{errors.category.message}</p>}
+          {errors.category && (
+            <p className={errorClass}>{errors.category.message}</p>
+          )}
         </div>
 
         {/* Content */}
@@ -116,7 +121,9 @@ function WriteArticles() {
             })}
           />
 
-          {errors.content && <p className={errorClass}>{errors.content.message}</p>}
+          {errors.content && (
+            <p className={errorClass}>{errors.content.message}</p>
+          )}
         </div>
 
         {/* Submit */}

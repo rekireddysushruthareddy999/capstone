@@ -10,9 +10,12 @@ function UserList() {
     const getUsers = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:2000/admin-api/users/user", {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          "${import.meta.env.VITE_API_URL}/admin-api/users/user",
+          {
+            withCredentials: true,
+          },
+        );
         if (res.status === 200) {
           setUsers(res.data.payload);
         }
@@ -28,17 +31,20 @@ function UserList() {
 
   const toggleUserStatus = async (userId, currentStatus) => {
     const newStatus = !currentStatus;
-    if (!window.confirm(newStatus ? "Activate this user?" : "Block this user?")) return;
+    if (!window.confirm(newStatus ? "Activate this user?" : "Block this user?"))
+      return;
 
     try {
       const res = await axios.patch(
-        "http://localhost:2000/admin-api/users",
+        "${import.meta.env.VITE_API_URL}/admin-api/users",
         { userId, isUserActive: newStatus },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       if (res.status === 201) {
         setUsers((prev) =>
-          prev.map((u) => u._id === userId ? { ...u, isUserActive: newStatus } : u)
+          prev.map((u) =>
+            u._id === userId ? { ...u, isUserActive: newStatus } : u,
+          ),
         );
       }
     } catch (err) {
@@ -64,10 +70,18 @@ function UserList() {
         <tbody>
           {users.map((user) => (
             <tr key={user._id} className="border-t">
-              <td className="p-3 border">{user.firstName} {user.lastName}</td>
+              <td className="p-3 border">
+                {user.firstName} {user.lastName}
+              </td>
               <td className="p-3 border">{user.email}</td>
               <td className="p-3 border">
-                <span className={user.isUserActive ? "text-green-600 font-medium" : "text-red-500 font-medium"}>
+                <span
+                  className={
+                    user.isUserActive
+                      ? "text-green-600 font-medium"
+                      : "text-red-500 font-medium"
+                  }
+                >
                   {user.isUserActive ? "Active" : "Blocked"}
                 </span>
               </td>
@@ -75,7 +89,9 @@ function UserList() {
                 <button
                   onClick={() => toggleUserStatus(user._id, user.isUserActive)}
                   className={`px-4 py-1 rounded-full text-white text-xs ${
-                    user.isUserActive ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
+                    user.isUserActive
+                      ? "bg-red-500 hover:bg-red-600"
+                      : "bg-green-500 hover:bg-green-600"
                   }`}
                 >
                   {user.isUserActive ? "Block" : "Activate"}

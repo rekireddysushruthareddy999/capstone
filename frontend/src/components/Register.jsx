@@ -11,11 +11,10 @@ import {
   mutedText,
 } from "../styles/common";
 import { useForm } from "react-hook-form";
-import { NavLink,useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../store/authStore";
-
 
 function Register() {
   const {
@@ -25,7 +24,7 @@ function Register() {
   } = useForm();
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
-  const [preview,setPreview]=useState(null)
+  const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
   const { login } = useAuth((state) => state);
 
@@ -34,33 +33,37 @@ function Register() {
     console.log(userObj);
     //file+userObj -> FormData
     //create FormData obj
-    const formData=new FormData()
+    const formData = new FormData();
     //add all user properties and files to this formData object
-    formData.append("firstName",userObj.firstName)
-    formData.append("lastName",userObj.lastName)
-    formData.append("email",userObj.email)
-    formData.append("password",userObj.password)
-    formData.append("role", userObj.role)
+    formData.append("firstName", userObj.firstName);
+    formData.append("lastName", userObj.lastName);
+    formData.append("email", userObj.email);
+    formData.append("password", userObj.password);
+    formData.append("role", userObj.role);
     //Append if image exists
-    if(userObj.profileImageUrl?.[0]){
-      formData.append("profileImageUrl",userObj.profileImageUrl[0]);
+    if (userObj.profileImageUrl?.[0]) {
+      formData.append("profileImageUrl", userObj.profileImageUrl[0]);
     }
 
     try {
       //start loading
       setLoading(true);
       //make http post req to create user in backend (and deal with loading and error states accordingly)
-const res = await axios.post("http://localhost:2000/common-api/users", formData,{withCredentials:true});      //auto login and navigate to home on successful registration
-      if(res.status===201){
+      const res = await axios.post(
+        "${import.meta.env.VITE_API_URL}/common-api/users",
+        formData,
+        { withCredentials: true },
+      ); //auto login and navigate to home on successful registration
+      if (res.status === 201) {
         await login({ email: userObj.email, password: userObj.password });
-        navigate("/")
+        navigate("/");
       }
     } catch (err) {
       console.log("err in registration", err);
       // Extract error message from various possible formats
-      const errorMessage = 
-        err.response?.data?.error || 
-        err.response?.data?.message || 
+      const errorMessage =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
         err.response?.data ||
         "Registration failed";
       setApiError(errorMessage);
@@ -72,7 +75,9 @@ const res = await axios.post("http://localhost:2000/common-api/users", formData,
   return (
     <div className={" flex items-center justify-center py-16 px-4"}>
       <div className="bg-white border-2 p-10 rounded-2xl border-blue-950">
-        <h2 className="text-blue-900 text-center font-bold text-2xl mb-6">Create an Account</h2>
+        <h2 className="text-blue-900 text-center font-bold text-2xl mb-6">
+          Create an Account
+        </h2>
 
         {/* API Error */}
         {apiError && <p className={errorClass}>{apiError}</p>}
@@ -134,7 +139,9 @@ const res = await axios.post("http://localhost:2000/common-api/users", formData,
                   validate: (v) => v.trim().length > 0 || "Cannot be empty",
                 })}
               />
-              {errors.firstName && <p className={errorClass}>{errors.firstName.message}</p>}
+              {errors.firstName && (
+                <p className={errorClass}>{errors.firstName.message}</p>
+              )}
             </div>
 
             <div className="flex-1 ">
@@ -150,7 +157,9 @@ const res = await axios.post("http://localhost:2000/common-api/users", formData,
                   },
                 })}
               />
-              {errors.lastName && <p className={errorClass}>{errors.lastName.message}</p>}
+              {errors.lastName && (
+                <p className={errorClass}>{errors.lastName.message}</p>
+              )}
             </div>
           </div>
 
@@ -166,7 +175,9 @@ const res = await axios.post("http://localhost:2000/common-api/users", formData,
                 required: [true, "Email is required"],
               })}
             />
-            {errors.email && <p className={errorClass}>{errors.email.message}</p>}
+            {errors.email && (
+              <p className={errorClass}>{errors.email.message}</p>
+            )}
           </div>
 
           {/* PASSWORD */}
@@ -180,48 +191,56 @@ const res = await axios.post("http://localhost:2000/common-api/users", formData,
                 required: "Password is required",
               })}
             />
-            {errors.password && <p className={errorClass}>{errors.password.message}</p>}
+            {errors.password && (
+              <p className={errorClass}>{errors.password.message}</p>
+            )}
           </div>
 
           {/* PROFILE IMAGE */}
           <div className={formGroup}>
             <label className={labelClass}>Profile Image</label>
 
-            <input type="file" 
-            accept="image/png, image/jpeg" className="bg-white border-1 mt-3 rounded p-2"
-            {...register("profileImageUrl",{
-              validate:{
-                fileType:(files)=>{
-                  if(!files?.[0]) return true;
-                  return ["image/png", "image/jpeg"].includes(files[0].type) || "Only JPEG/PNG Files allowed to upload"
+            <input
+              type="file"
+              accept="image/png, image/jpeg"
+              className="bg-white border-1 mt-3 rounded p-2"
+              {...register("profileImageUrl", {
+                validate: {
+                  fileType: (files) => {
+                    if (!files?.[0]) return true;
+                    return (
+                      ["image/png", "image/jpeg"].includes(files[0].type) ||
+                      "Only JPEG/PNG Files allowed to upload"
+                    );
+                  },
+                  fileSize: (files) => {
+                    if (!files?.[0]) return true;
+                    return files[0].size <= 1 * 1024 * 1024 || "Max size 1MB";
+                  },
                 },
-                fileSize:(files)=>{
-                  if(!files?.[0]) return true;
-                  return files[0].size<= 1 * 1024 * 1024 || "Max size 1MB"
+              })}
+              onChange={(event) => {
+                let file = event.target.files[0];
+                if (file) {
+                  setPreview(URL.createObjectURL(file));
                 }
-              }
-            })}
-            onChange={(event)=>{
-              let file=event.target.files[0]
-              if(file){
-                setPreview(URL.createObjectURL(file))
-              }
-            }}
-             />
+              }}
+            />
 
-            {errors.profileImageUrl && <p className={errorClass}>{errors.profileImageUrl.message}</p>}
+            {errors.profileImageUrl && (
+              <p className={errorClass}>{errors.profileImageUrl.message}</p>
+            )}
 
             {/* image preview */}
-            {
-              preview && <div className="mt-3">
-                <img 
-                src={preview} 
-                alt="Profile Preview" 
-                className="w-24 h-24 rounded-full object-cover border border-gray-300"
+            {preview && (
+              <div className="mt-3">
+                <img
+                  src={preview}
+                  alt="Profile Preview"
+                  className="w-24 h-24 rounded-full object-cover border border-gray-300"
                 />
               </div>
-            }
-
+            )}
           </div>
 
           {/* SUBMIT */}

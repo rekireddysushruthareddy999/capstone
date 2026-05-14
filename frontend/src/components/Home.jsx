@@ -33,9 +33,12 @@ function Home() {
     const getArticles = async () => {
       setLoading(true);
       try {
-        let res = await axios.get("http://localhost:2000/user-api/articles", { withCredentials: true })
+        let res = await axios.get(
+          "${import.meta.env.VITE_API_URL}/user-api/articles",
+          { withCredentials: true },
+        );
         if (res.status === 200) {
-          setArticles(res.data.payload)
+          setArticles(res.data.payload);
         }
       } catch (err) {
         setError(err.response?.data?.error || "Something went wrong");
@@ -61,46 +64,56 @@ function Home() {
 
   if (loading) return <p className={loadingClass}>Loading...</p>;
 
-// ADMIN VIEW
-if (currentUser?.role === "ADMIN" || currentUser?.role === "admin") {
-  return (
-    <div className="max-w-5xl mx-auto px-6 py-10">
-      <h2 className="text-2xl font-semibold text-[#1d1d1f] mb-6">Admin Dashboard</h2>
-      
-      {/* TABS */}
-      <div className="flex gap-3 mb-6 bg-[#f5f5f7] p-2 rounded-full w-fit">
-        <button
-          onClick={() => setActiveTab("users")}
-          className={activeTab === "users"
-            ? "bg-white px-5 py-2 rounded-full text-[#0066cc] text-sm font-medium shadow-sm"
-            : "px-5 py-2 text-sm text-gray-500"}
-        >
-          Users
-        </button>
-        <button
-          onClick={() => setActiveTab("authors")}
-          className={activeTab === "authors"
-            ? "bg-white px-5 py-2 rounded-full text-[#0066cc] text-sm font-medium shadow-sm"
-            : "px-5 py-2 text-sm text-gray-500"}
-        >
-          Authors
-        </button>
-      </div>
+  // ADMIN VIEW
+  if (currentUser?.role === "ADMIN" || currentUser?.role === "admin") {
+    return (
+      <div className="max-w-5xl mx-auto px-6 py-10">
+        <h2 className="text-2xl font-semibold text-[#1d1d1f] mb-6">
+          Admin Dashboard
+        </h2>
 
-      {/* CONTENT */}
-      {activeTab === "users" ? <UserList /> : <AuthorList />}
-    </div>
-  );
-}
+        {/* TABS */}
+        <div className="flex gap-3 mb-6 bg-[#f5f5f7] p-2 rounded-full w-fit">
+          <button
+            onClick={() => setActiveTab("users")}
+            className={
+              activeTab === "users"
+                ? "bg-white px-5 py-2 rounded-full text-[#0066cc] text-sm font-medium shadow-sm"
+                : "px-5 py-2 text-sm text-gray-500"
+            }
+          >
+            Users
+          </button>
+          <button
+            onClick={() => setActiveTab("authors")}
+            className={
+              activeTab === "authors"
+                ? "bg-white px-5 py-2 rounded-full text-[#0066cc] text-sm font-medium shadow-sm"
+                : "px-5 py-2 text-sm text-gray-500"
+            }
+          >
+            Authors
+          </button>
+        </div>
+
+        {/* CONTENT */}
+        {activeTab === "users" ? <UserList /> : <AuthorList />}
+      </div>
+    );
+  }
 
   // REGULAR VIEW
   return (
     <div className="max-w-5xl mx-auto px-6 py-10">
       <div className="mt-4">
-        <h3 className="text-lg font-semibold text-[#1d1d1f] mb-4">Latest Articles</h3>
+        <h3 className="text-lg font-semibold text-[#1d1d1f] mb-4">
+          Latest Articles
+        </h3>
 
         {articles.length === 0 ? (
-          <p className="text-[#a1a1a6] text-sm text-center py-10">No articles available yet</p>
+          <p className="text-[#a1a1a6] text-sm text-center py-10">
+            No articles available yet
+          </p>
         ) : (
           <div className={articleGrid}>
             {articles.map((articleObj) => (
@@ -108,10 +121,17 @@ if (currentUser?.role === "ADMIN" || currentUser?.role === "admin") {
                 <div className="flex flex-col h-full">
                   <div>
                     <p className={articleTitle}>{articleObj.title}</p>
-                    <p className="text-sm text-[#6e6e73] mt-1">{articleObj.content.slice(0, 80)}...</p>
-                    <p className={`${timestampClass} mt-2`}>{formatDateIST(articleObj.createdAt)}</p>
+                    <p className="text-sm text-[#6e6e73] mt-1">
+                      {articleObj.content.slice(0, 80)}...
+                    </p>
+                    <p className={`${timestampClass} mt-2`}>
+                      {formatDateIST(articleObj.createdAt)}
+                    </p>
                   </div>
-                  <button className={`${ghostBtn} mt-auto pt-4`} onClick={() => navigateToArticleByID(articleObj)}>
+                  <button
+                    className={`${ghostBtn} mt-auto pt-4`}
+                    onClick={() => navigateToArticleByID(articleObj)}
+                  >
                     Read Article →
                   </button>
                 </div>

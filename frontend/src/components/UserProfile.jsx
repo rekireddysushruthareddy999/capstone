@@ -28,10 +28,13 @@ function UserProfile() {
       setLoading(true);
       try {
         //read articles of all authors
-        let res=await axios.get("http://localhost:2000/user-api/articles",{withCredentials:true})
+        let res = await axios.get(
+          "${import.meta.env.VITE_API_URL}/user-api/articles",
+          { withCredentials: true },
+        );
         //update articles state
-        if(res.status===200){
-          setArticles((await res).data.payload)
+        if (res.status === 200) {
+          setArticles((await res).data.payload);
         }
       } catch (err) {
         setError(err.response?.data?.error || "Something went wrong");
@@ -54,7 +57,7 @@ function UserProfile() {
 
   const onLogout = async () => {
     await logout();
-    toast.success("Logout Successful.")
+    toast.success("Logout Successful.");
     navigate("/login");
   };
 
@@ -93,7 +96,9 @@ function UserProfile() {
           {/* Name */}
           <div>
             <p className="text-sm text-[#6e6e73]">Welcome back</p>
-            <h2 className="text-xl font-semibold text-[#1d1d1f]">{currentUser?.firstName}</h2>
+            <h2 className="text-xl font-semibold text-[#1d1d1f]">
+              {currentUser?.firstName}
+            </h2>
           </div>
         </div>
 
@@ -104,7 +109,6 @@ function UserProfile() {
         >
           Logout
         </button>
-
       </div>
     </div>
   );

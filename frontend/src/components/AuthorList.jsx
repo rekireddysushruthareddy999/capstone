@@ -10,9 +10,12 @@ function AuthorList() {
     const getAuthors = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:2000/admin-api/users/author", {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          "${import.meta.env.VITE_API_URL}/admin-api/users/author",
+          {
+            withCredentials: true,
+          },
+        );
         if (res.status === 200) {
           // filter only authors
           setAuthors(res.data.payload);
@@ -29,20 +32,22 @@ function AuthorList() {
 
   const toggleAuthorStatus = async (authorId, currentStatus) => {
     const newStatus = !currentStatus;
-    const confirmMsg = newStatus ? "Activate this author?" : "Block this author?";
+    const confirmMsg = newStatus
+      ? "Activate this author?"
+      : "Block this author?";
     if (!window.confirm(confirmMsg)) return;
 
     try {
       const res = await axios.patch(
-        "http://localhost:2000/admin-api/users",
+        "${import.meta.env.VITE_API_URL}/admin-api/users",
         { userId: authorId, isUserActive: newStatus },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       if (res.status === 201) {
         setAuthors((prev) =>
           prev.map((a) =>
-            a._id === authorId ? { ...a, isUserActive: newStatus } : a
-          )
+            a._id === authorId ? { ...a, isUserActive: newStatus } : a,
+          ),
         );
       }
     } catch (err) {
@@ -68,18 +73,30 @@ function AuthorList() {
         <tbody>
           {authors.map((author) => (
             <tr key={author._id} className="border-t">
-              <td className="p-3 border">{author.firstName} {author.lastName}</td>
+              <td className="p-3 border">
+                {author.firstName} {author.lastName}
+              </td>
               <td className="p-3 border">{author.email}</td>
               <td className="p-3 border">
-                <span className={author.isUserActive ? "text-green-600 font-medium" : "text-red-500 font-medium"}>
+                <span
+                  className={
+                    author.isUserActive
+                      ? "text-green-600 font-medium"
+                      : "text-red-500 font-medium"
+                  }
+                >
                   {author.isUserActive ? "Active" : "Blocked"}
                 </span>
               </td>
               <td className="p-3 border">
                 <button
-                  onClick={() => toggleAuthorStatus(author._id, author.isUserActive)}
+                  onClick={() =>
+                    toggleAuthorStatus(author._id, author.isUserActive)
+                  }
                   className={`px-4 py-1 rounded-full text-white text-xs ${
-                    author.isUserActive ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
+                    author.isUserActive
+                      ? "bg-red-500 hover:bg-red-600"
+                      : "bg-green-500 hover:bg-green-600"
                   }`}
                 >
                   {author.isUserActive ? "Block" : "Activate"}

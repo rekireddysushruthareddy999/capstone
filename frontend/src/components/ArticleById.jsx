@@ -25,7 +25,6 @@ import {
   commentUser,
   commentTime,
   commentText,
-  
 } from "../styles/common.js";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -51,7 +50,10 @@ function ArticleByID() {
       setLoading(true);
 
       try {
-        const res = await axios.get(`http://localhost:2000/user-api/article/${id}`, { withCredentials: true });
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/user-api/article/${id}`,
+          { withCredentials: true },
+        );
 
         setArticle(res.data.payload);
       } catch (err) {
@@ -76,12 +78,14 @@ function ArticleByID() {
   const toggleArticleStatus = async () => {
     const newStatus = !article.isArticleActive;
 
-    const confirmMsg = newStatus ? "Restore this article?" : "Delete this article?";
+    const confirmMsg = newStatus
+      ? "Restore this article?"
+      : "Delete this article?";
     if (!window.confirm(confirmMsg)) return;
 
     try {
       const res = await axios.patch(
-        "http://localhost:2000/author-api/articles",
+        "${import.meta.env.VITE_API_URL}/author-api/articles",
         { articleId: article._id, isArticleActive: newStatus },
         { withCredentials: true },
       );
@@ -90,7 +94,7 @@ function ArticleByID() {
 
       setArticle(res.data.payload);
 
-       toast.success(res.data.message);
+      toast.success(res.data.message);
     } catch (err) {
       console.log("ERROR:", err.response);
 
@@ -114,26 +118,29 @@ function ArticleByID() {
     //add artcileId
     commentObj.articleId = article._id;
     console.log(commentObj);
-    let res = await axios.put("http://localhost:2000/user-api/articles", commentObj, { withCredentials: true });
+    let res = await axios.put(
+      "${import.meta.env.VITE_API_URL}/user-api/articles",
+      commentObj,
+      { withCredentials: true },
+    );
     if (res.status === 201) {
       toast.success(res.data.message);
       setArticle(res.data.payload);
     }
-      console.log("loading:", loading, "error:", error, "article:", article);
+    console.log("loading:", loading, "error:", error, "article:", article);
   };
 
   //to delete comment(by author)
   const deleteComment = async (commentId) => {
-    if (!window.confirm("Delete this comment?")) return
+    if (!window.confirm("Delete this comment?")) return;
     const res = await axios.delete(
-        `http://localhost:2000/author-api/articles/${article._id}/comments/${commentId}`,
-        { withCredentials: true }
-    )
+      `${import.meta.env.VITE_API_URL}/author-api/articles/${article._id}/comments/${commentId}`,
+      { withCredentials: true },
+    );
     if (res.status === 200) {
-        setArticle(res.data.payload)
+      setArticle(res.data.payload);
     }
-}
-
+  };
 
   if (loading) return <p className={loadingClass}>Loading article...</p>;
   if (error) return <p className={errorClass}>{error}</p>;
@@ -148,7 +155,10 @@ function ArticleByID() {
         <h1 className={`${articleMainTitle} uppercase`}>{article.title}</h1>
 
         <div className={articleAuthorRow}>
-          <div className={authorInfo}> {article.author?.firstName || "Author"}</div>
+          <div className={authorInfo}>
+            {" "}
+            {article.author?.firstName || "Author"}
+          </div>
 
           <div>{formatDate(article.createdAt)}</div>
         </div>
@@ -180,7 +190,10 @@ function ArticleByID() {
               className={inputClass}
               placeholder="Write your comment here..."
             />
-            <button type="submit" className="bg-amber-600 text-white px-5 py-2 rounded-2xl mt-5">
+            <button
+              type="submit"
+              className="bg-amber-600 text-white px-5 py-2 rounded-2xl mt-5"
+            >
               Add comment
             </button>
           </form>
@@ -190,50 +203,59 @@ function ArticleByID() {
       {/* comments */}
       {/* Comments */}
       <div className={commentsWrapper}>
-        {article.comments?.length === 0 && <p className="text-[#a1a1a6] text-sm text-center">No comments yet</p>}
+        {article.comments?.length === 0 && (
+          <p className="text-[#a1a1a6] text-sm text-center">No comments yet</p>
+        )}
 
         {article.comments?.map((commentObj, index) => {
-          const name = commentObj.user?.firstName || commentObj.user?.email || "User";
+          const name =
+            commentObj.user?.firstName || commentObj.user?.email || "User";
           const firstLetter = name.charAt(0).toUpperCase();
 
           return (
-           <div key={index} className={commentCard}>
-    {/* Header */}
-    <div className={commentHeader}>
-      <div className={commentUserRow}>
-        {commentObj.user?.profileImageUrl ? (
-          <img src={commentObj.user.profileImageUrl} className="w-9 h-9 rounded-full object-cover" />
-        ) : (
-          <div className={avatar}>{firstLetter}</div>
-        )}
+            <div key={index} className={commentCard}>
+              {/* Header */}
+              <div className={commentHeader}>
+                <div className={commentUserRow}>
+                  {commentObj.user?.profileImageUrl ? (
+                    <img
+                      src={commentObj.user.profileImageUrl}
+                      className="w-9 h-9 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className={avatar}>{firstLetter}</div>
+                  )}
 
-        <div>
-          <p className={commentUser}>{name}</p>
-          <p className={commentTime}>{formatDate(commentObj.createdAt || new Date())}</p>
-        </div>
-      </div>
-    </div>
+                  <div>
+                    <p className={commentUser}>{name}</p>
+                    <p className={commentTime}>
+                      {formatDate(commentObj.createdAt || new Date())}
+                    </p>
+                  </div>
+                </div>
+              </div>
 
               {/* Comment */}
               <p className={commentText}>{commentObj.comment}</p>
               {user?.role === "AUTHOR" && (
-                <button 
-                    onClick={() => deleteComment(commentObj._id)}
-                    className="text-red-500 text-xs mt-2"
+                <button
+                  onClick={() => deleteComment(commentObj._id)}
+                  className="text-red-500 text-xs mt-2"
                 >
-                    Delete
+                  Delete
                 </button>
-            )}
+              )}
             </div>
           );
         })}
       </div>
 
       {/* Footer */}
-      <div className={articleFooter}>Last updated: {formatDate(article.updatedAt)}</div>
+      <div className={articleFooter}>
+        Last updated: {formatDate(article.updatedAt)}
+      </div>
     </div>
   );
 }
 
 export default ArticleByID;
-
