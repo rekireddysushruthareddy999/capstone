@@ -11,7 +11,7 @@ function UserList() {
       try {
         setLoading(true);
         const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/admin-api/users/user`,
+          `https://capstone-lq6s.onrender.com/admin-api/users/user`,
           {
             withCredentials: true,
           },
@@ -36,7 +36,7 @@ function UserList() {
 
     try {
       const res = await axios.patch(
-        "${import.meta.env.VITE_API_URL}/admin-api/users",
+        "https://capstone-lq6s.onrender.com/admin-api/users",
         { userId, isUserActive: newStatus },
         { withCredentials: true },
       );

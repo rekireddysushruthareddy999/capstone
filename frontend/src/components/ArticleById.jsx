@@ -51,7 +51,7 @@ function ArticleByID() {
 
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/user-api/article/${id}`,
+          `https://capstone-lq6s.onrender.com/user-api/article/${id}`,
           { withCredentials: true },
         );
 
@@ -85,7 +85,7 @@ function ArticleByID() {
 
     try {
       const res = await axios.patch(
-        `${import.meta.env.VITE_API_URL}/author-api/articles`,
+        `https://capstone-lq6s.onrender.com/author-api/articles`,
         { articleId: article._id, isArticleActive: newStatus },
         { withCredentials: true },
       );
@@ -119,7 +119,7 @@ function ArticleByID() {
     commentObj.articleId = article._id;
     console.log(commentObj);
     let res = await axios.put(
-      `${import.meta.env.VITE_API_URL}/user-api/articles`,
+      `https://capstone-lq6s.onrender.com/user-api/articles`,
       commentObj,
       { withCredentials: true },
     );
@@ -134,7 +134,7 @@ function ArticleByID() {
   const deleteComment = async (commentId) => {
     if (!window.confirm("Delete this comment?")) return;
     const res = await axios.delete(
-      `${import.meta.env.VITE_API_URL}/author-api/articles/${article._id}/comments/${commentId}`,
+      `https://capstone-lq6s.onrender.com/author-api/articles/${article._id}/comments/${commentId}`,
       { withCredentials: true },
     );
     if (res.status === 200) {

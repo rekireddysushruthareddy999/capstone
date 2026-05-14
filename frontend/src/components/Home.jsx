@@ -34,11 +34,11 @@ function Home() {
       setLoading(true);
       try {
         let res = await axios.get(
-         `${import.meta.env.VITE_API_URL}/user-api/articles`,
+          `https://capstone-lq6s.onrender.com/user-api/articles`,
           { withCredentials: true },
         );
         if (res.status === 200) {
-            console.log("API response data:", res.data);
+          console.log("API response data:", res.data);
           // setArticles(res.data.payload);
           setArticles(res.data.payload ?? []);
         }

@@ -11,7 +11,7 @@ function AuthorList() {
       try {
         setLoading(true);
         const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/admin-api/users/author`,
+          `https://capstone-lq6s.onrender.com/admin-api/users/author`,
           {
             withCredentials: true,
           },
@@ -39,7 +39,7 @@ function AuthorList() {
 
     try {
       const res = await axios.patch(
-        "${import.meta.env.VITE_API_URL}/admin-api/users",
+        "https://capstone-lq6s.onrender.com/admin-api/users",
         { userId: authorId, isUserActive: newStatus },
         { withCredentials: true },
       );

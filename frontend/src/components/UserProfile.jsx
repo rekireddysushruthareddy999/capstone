@@ -29,7 +29,7 @@ function UserProfile() {
       try {
         //read articles of all authors
         let res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/user-api/articles`,
+          `https://capstone-lq6s.onrender.com/user-api/articles`,
           { withCredentials: true },
         );
         //update articles state

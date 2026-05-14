@@ -34,7 +34,7 @@ function AuthorArticles() {
         setLoading(true);
         //read articles of current author
         let res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/author-api/articles`,
+          `https://capstone-lq6s.onrender.com/author-api/articles`,
           { withCredentials: true },
         );
         if (res.status === 200) {

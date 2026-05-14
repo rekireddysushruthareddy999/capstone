@@ -50,7 +50,7 @@ function Register() {
       setLoading(true);
       //make http post req to create user in backend (and deal with loading and error states accordingly)
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/common-api/users`,
+        `https://capstone-lq6s.onrender.com/common-api/users`,
         formData,
         { withCredentials: true },
       ); //auto login and navigate to home on successful registration
