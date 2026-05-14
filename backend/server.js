@@ -10,17 +10,15 @@ import cors from 'cors'
 config()
 const app = exp()
 
-app.use(cors({
-    origin: function(origin, callback) {
-        if (!origin) return callback(null, true);
-        if (origin === 'http://localhost:5173') {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://capstone-seven-beta.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 app.use(exp.json())
 app.use(cookieParser())
 app.use('/user-api',userApp)
