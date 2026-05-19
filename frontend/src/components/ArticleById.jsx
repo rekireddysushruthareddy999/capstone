@@ -19,17 +19,13 @@ function ArticleByID() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { register, handleSubmit, reset } =
-    useForm();
+  const { register, handleSubmit, reset } = useForm();
 
-  const user = useAuth(
-    (state) => state.currentUser
-  );
+  const user = useAuth((state) => state.currentUser);
 
   const [article, setArticle] = useState(null);
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [error, setError] = useState("");
 
@@ -39,15 +35,12 @@ function ArticleByID() {
 
       try {
         const res = await axios.get(
-          `http://localhost:2000/user-api/article/${id}`
+          `https://capstone-lq6s.onrender.com/user-api/article/${id}`,
         );
 
         setArticle(res.data.payload);
       } catch (err) {
-        setError(
-          err.response?.data?.message ||
-            "Failed to load article"
-        );
+        setError(err.response?.data?.message || "Failed to load article");
       } finally {
         setLoading(false);
       }
@@ -57,14 +50,11 @@ function ArticleByID() {
   }, [id]);
 
   const formatDate = (date) => {
-    return new Date(date).toLocaleString(
-      "en-IN",
-      {
-        timeZone: "Asia/Kolkata",
-        dateStyle: "medium",
-        timeStyle: "short",
-      }
-    );
+    return new Date(date).toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
   };
 
   // EDIT ARTICLE
@@ -78,25 +68,21 @@ function ArticleByID() {
   const toggleArticleStatus = async () => {
     try {
       const res = await axios.patch(
-        `http://localhost:2000/author-api/articles/${article._id}`,
+        `https://capstone-lq6s.onrender.com/author-api/articles/${article._id}`,
         {
           articleId: article._id,
-          isArticleActive:
-            !article.isArticleActive,
+          isArticleActive: !article.isArticleActive,
         },
         {
           withCredentials: true,
-        }
+        },
       );
 
       setArticle(res.data.payload);
 
       toast.success(res.data.message);
     } catch (err) {
-      toast.error(
-        err.response?.data?.message ||
-          "Operation failed"
-      );
+      toast.error(err.response?.data?.message || "Operation failed");
     }
   };
 
@@ -106,11 +92,11 @@ function ArticleByID() {
       commentObj.articleId = article._id;
 
       const res = await axios.put(
-        `http://localhost:2000/user-api/articles`,
+        `https://capstone-lq6s.onrender.com/user-api/articles`,
         commentObj,
         {
           withCredentials: true,
-        }
+        },
       );
 
       if (res.status === 201) {
@@ -129,10 +115,10 @@ function ArticleByID() {
   const deleteComment = async (commentId) => {
     try {
       const res = await axios.delete(
-        `http://localhost:2000/author-api/articles/${article._id}/comments/${commentId}`,
+        `https://capstone-lq6s.onrender.com/author-api/articles/${article._id}/comments/${commentId}`,
         {
           withCredentials: true,
-        }
+        },
       );
 
       if (res.status === 200) {
@@ -198,15 +184,12 @@ function ArticleByID() {
           <div className="flex flex-wrap items-center gap-6 mt-6 text-sm opacity-90">
             <div className="flex items-center gap-2">
               <User size={16} />
-              {article.author?.firstName ||
-                "Author"}
+              {article.author?.firstName || "Author"}
             </div>
 
             <div className="flex items-center gap-2">
               <Clock size={16} />
-              {formatDate(
-                article.createdAt
-              )}
+              {formatDate(article.createdAt)}
             </div>
           </div>
         </div>
@@ -229,9 +212,7 @@ function ArticleByID() {
               </button>
 
               <button
-                onClick={
-                  toggleArticleStatus
-                }
+                onClick={toggleArticleStatus}
                 className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow-lg hover:scale-105 transition"
               >
                 {article.isArticleActive ? (
@@ -251,12 +232,7 @@ function ArticleByID() {
 
           {/* COMMENT FORM */}
           {user?.role === "USER" && (
-            <form
-              onSubmit={handleSubmit(
-                addComment
-              )}
-              className="mt-12"
-            >
+            <form onSubmit={handleSubmit(addComment)} className="mt-12">
               <h2 className="text-2xl font-bold text-gray-800 mb-5">
                 Add Comment
               </h2>
@@ -284,9 +260,7 @@ function ArticleByID() {
             <div className="flex items-center gap-3 mb-8">
               <MessageCircle className="text-blue-600" />
 
-              <h2 className="text-3xl font-bold text-gray-800">
-                Comments
-              </h2>
+              <h2 className="text-3xl font-bold text-gray-800">Comments</h2>
             </div>
 
             {article.comments?.length === 0 ? (
@@ -295,98 +269,73 @@ function ArticleByID() {
               </div>
             ) : (
               <div className="space-y-5">
-                {article.comments?.map(
-                  (commentObj) => {
-                    const name =
-                      commentObj.user
-                        ?.firstName ||
-                      commentObj.user
-                        ?.email ||
-                      "User";
+                {article.comments?.map((commentObj) => {
+                  const name =
+                    commentObj.user?.firstName ||
+                    commentObj.user?.email ||
+                    "User";
 
-                    return (
-                      <motion.div
-                        key={
-                          commentObj._id
-                        }
-                        initial={{
-                          opacity: 0,
-                          y: 15,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          y: 0,
-                        }}
-                        className="bg-slate-50 border border-slate-200 rounded-3xl p-5"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4">
-                            {commentObj.user
-                              ?.profileImageUrl ? (
-                              <img
-                                src={
-                                  commentObj
-                                    .user
-                                    .profileImageUrl
-                                }
-                                alt=""
-                                className="w-12 h-12 rounded-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 flex items-center justify-center text-white font-bold">
-                                {name
-                                  .charAt(0)
-                                  .toUpperCase()}
-                              </div>
-                            )}
-
-                            <div>
-                              <h4 className="font-semibold text-gray-800">
-                                {name}
-                              </h4>
-
-                              <p className="text-sm text-gray-400">
-                                {formatDate(
-                                  commentObj.createdAt
-                                )}
-                              </p>
+                  return (
+                    <motion.div
+                      key={commentObj._id}
+                      initial={{
+                        opacity: 0,
+                        y: 15,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                      }}
+                      className="bg-slate-50 border border-slate-200 rounded-3xl p-5"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          {commentObj.user?.profileImageUrl ? (
+                            <img
+                              src={commentObj.user.profileImageUrl}
+                              alt=""
+                              className="w-12 h-12 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 flex items-center justify-center text-white font-bold">
+                              {name.charAt(0).toUpperCase()}
                             </div>
-                          </div>
-
-                          {user?.role ===
-                            "AUTHOR" && (
-                            <button
-                              onClick={() =>
-                                deleteComment(
-                                  commentObj._id
-                                )
-                              }
-                              className="text-red-500 hover:text-red-600 transition"
-                            >
-                              <Trash2
-                                size={18}
-                              />
-                            </button>
                           )}
+
+                          <div>
+                            <h4 className="font-semibold text-gray-800">
+                              {name}
+                            </h4>
+
+                            <p className="text-sm text-gray-400">
+                              {formatDate(commentObj.createdAt)}
+                            </p>
+                          </div>
                         </div>
 
-                        <p className="mt-4 text-gray-700 leading-7">
-                          {
-                            commentObj.comment
-                          }
-                        </p>
-                      </motion.div>
-                    );
-                  }
-                )}
+                        {user?.role === "AUTHOR" && (
+                          <button
+                            onClick={() => deleteComment(commentObj._id)}
+                            className="text-red-500 hover:text-red-600 transition"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        )}
+                      </div>
+
+                      <p className="mt-4 text-gray-700 leading-7">
+                        {commentObj.comment}
+                      </p>
+                    </motion.div>
+                  );
+                })}
               </div>
             )}
           </div>
 
           {/* FOOTER */}
           <div className="mt-12 pt-6 border-t border-slate-200 text-sm text-gray-400">
-            Last updated :{" "}
-            {formatDate(article.updatedAt)}
+            Last updated : {formatDate(article.updatedAt)}
           </div>
         </div>
       </motion.div>

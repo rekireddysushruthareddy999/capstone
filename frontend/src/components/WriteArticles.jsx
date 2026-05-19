@@ -4,24 +4,16 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
-import {
-  PenSquare,
-  Layers3,
-  FileText,
-  Send,
-} from "lucide-react";
+import { PenSquare, Layers3, FileText, Send } from "lucide-react";
 
 import { useAuth } from "../store/authStore";
 
 function WriteArticles() {
   const navigate = useNavigate();
 
-  const currentUser = useAuth(
-    (state) => state.currentUser
-  );
+  const currentUser = useAuth((state) => state.currentUser);
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -29,37 +21,27 @@ function WriteArticles() {
     formState: { errors },
   } = useForm();
 
-  const submitArticle = async (
-    articleObj
-  ) => {
+  const submitArticle = async (articleObj) => {
     try {
       setLoading(true);
 
-      articleObj.author =
-        currentUser._id;
+      articleObj.author = currentUser._id;
 
       const res = await axios.post(
-        `http://localhost:2000/author-api/articles`,
+        `https://capstone-lq6s.onrender.com/author-api/articles`,
         articleObj,
         {
           withCredentials: true,
-        }
+        },
       );
 
       if (res.status === 201) {
-        toast.success(
-          "Article published successfully"
-        );
+        toast.success("Article published successfully");
 
-        navigate(
-          "/author-profile/articles"
-        );
+        navigate("/author-profile/articles");
       }
     } catch (err) {
-      toast.error(
-        err.response?.data?.message ||
-          "Failed to publish article"
-      );
+      toast.error(err.response?.data?.message || "Failed to publish article");
     } finally {
       setLoading(false);
     }
@@ -93,32 +75,20 @@ function WriteArticles() {
                 Author Panel
               </p>
 
-              <h1 className="text-4xl font-bold mt-2">
-                Write New Article
-              </h1>
+              <h1 className="text-4xl font-bold mt-2">Write New Article</h1>
 
-              <p className="mt-2 opacity-90">
-                Share your ideas with the world
-              </p>
+              <p className="mt-2 opacity-90">Share your ideas with the world</p>
             </div>
           </div>
         </div>
 
         {/* FORM */}
         <div className="p-8 md:p-10">
-          <form
-            onSubmit={handleSubmit(
-              submitArticle
-            )}
-            className="space-y-8"
-          >
+          <form onSubmit={handleSubmit(submitArticle)} className="space-y-8">
             {/* TITLE */}
             <div>
               <label className="flex items-center gap-2 text-gray-700 font-semibold mb-3">
-                <PenSquare
-                  size={18}
-                  className="text-blue-600"
-                />
+                <PenSquare size={18} className="text-blue-600" />
                 Article Title
               </label>
 
@@ -127,22 +97,17 @@ function WriteArticles() {
                 placeholder="Enter article title"
                 className="w-full bg-slate-100 border border-slate-200 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-400 text-gray-700"
                 {...register("title", {
-                  required:
-                    "Title is required",
+                  required: "Title is required",
                   minLength: {
                     value: 5,
-                    message:
-                      "Title must be at least 5 characters",
+                    message: "Title must be at least 5 characters",
                   },
                 })}
               />
 
               {errors.title && (
                 <p className="text-red-500 text-sm mt-2">
-                  {
-                    errors.title
-                      .message
-                  }
+                  {errors.title.message}
                 </p>
               )}
             </div>
@@ -150,58 +115,34 @@ function WriteArticles() {
             {/* CATEGORY */}
             <div>
               <label className="flex items-center gap-2 text-gray-700 font-semibold mb-3">
-                <Layers3
-                  size={18}
-                  className="text-blue-600"
-                />
+                <Layers3 size={18} className="text-blue-600" />
                 Category
               </label>
 
               <select
                 className="w-full bg-slate-100 border border-slate-200 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-400 text-gray-700"
-                {...register(
-                  "category",
-                  {
-                    required:
-                      "Category is required",
-                  }
-                )}
+                {...register("category", {
+                  required: "Category is required",
+                })}
               >
-                <option value="">
-                  Select category
-                </option>
+                <option value="">Select category</option>
 
-                <option value="technology">
-                  Technology
-                </option>
+                <option value="technology">Technology</option>
 
-                <option value="programming">
-                  Programming
-                </option>
+                <option value="programming">Programming</option>
 
-                <option value="ai">
-                  AI
-                </option>
+                <option value="ai">AI</option>
 
-                <option value="web-development">
-                  Web Development
-                </option>
+                <option value="web-development">Web Development</option>
 
-                <option value="philosophy">
-                  Philosophy
-                </option>
+                <option value="philosophy">Philosophy</option>
 
-                <option value="thrillers">
-                  Thrillers
-                </option>
+                <option value="thrillers">Thrillers</option>
               </select>
 
               {errors.category && (
                 <p className="text-red-500 text-sm mt-2">
-                  {
-                    errors.category
-                      .message
-                  }
+                  {errors.category.message}
                 </p>
               )}
             </div>
@@ -209,10 +150,7 @@ function WriteArticles() {
             {/* CONTENT */}
             <div>
               <label className="flex items-center gap-2 text-gray-700 font-semibold mb-3">
-                <FileText
-                  size={18}
-                  className="text-blue-600"
-                />
+                <FileText size={18} className="text-blue-600" />
                 Content
               </label>
 
@@ -221,22 +159,17 @@ function WriteArticles() {
                 placeholder="Write your article content..."
                 className="w-full bg-slate-100 border border-slate-200 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 resize-none leading-7"
                 {...register("content", {
-                  required:
-                    "Content is required",
+                  required: "Content is required",
                   minLength: {
                     value: 50,
-                    message:
-                      "Content must be at least 50 characters",
+                    message: "Content must be at least 50 characters",
                   },
                 })}
               />
 
               {errors.content && (
                 <p className="text-red-500 text-sm mt-2">
-                  {
-                    errors.content
-                      .message
-                  }
+                  {errors.content.message}
                 </p>
               )}
             </div>
@@ -255,9 +188,7 @@ function WriteArticles() {
             >
               <Send size={18} />
 
-              {loading
-                ? "Publishing..."
-                : "Publish Article"}
+              {loading ? "Publishing..." : "Publish Article"}
             </motion.button>
           </form>
         </div>

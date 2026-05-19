@@ -4,22 +4,14 @@ import axios from "axios";
 
 import { motion } from "framer-motion";
 
-import {
-  Users,
-  ShieldCheck,
-  ShieldX,
-  Mail,
-} from "lucide-react";
+import { Users, ShieldCheck, ShieldX, Mail } from "lucide-react";
 
 function UserList() {
-  const [users, setUsers] =
-    useState([]);
+  const [users, setUsers] = useState([]);
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [error, setError] =
-    useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -27,23 +19,17 @@ function UserList() {
         setLoading(true);
 
         const res = await axios.get(
-          `http://localhost:2000/admin-api/users/user`,
+          `https://capstone-lq6s.onrender.com/admin-api/users/user`,
           {
             withCredentials: true,
-          }
+          },
         );
 
         if (res.status === 200) {
-          setUsers(
-            res.data.payload
-          );
+          setUsers(res.data.payload);
         }
       } catch (err) {
-        setError(
-          err.response?.data
-            ?.message ||
-            "Failed to fetch users"
-        );
+        setError(err.response?.data?.message || "Failed to fetch users");
       } finally {
         setLoading(false);
       }
@@ -52,59 +38,41 @@ function UserList() {
     getUsers();
   }, []);
 
-  const toggleUserStatus =
-    async (
-      userId,
-      currentStatus
-    ) => {
-      const newStatus =
-        !currentStatus;
+  const toggleUserStatus = async (userId, currentStatus) => {
+    const newStatus = !currentStatus;
 
-      const confirmMsg =
-        newStatus
-          ? "Activate this user?"
-          : "Block this user?";
+    const confirmMsg = newStatus ? "Activate this user?" : "Block this user?";
 
-      if (
-        !window.confirm(confirmMsg)
-      )
-        return;
+    if (!window.confirm(confirmMsg)) return;
 
-      try {
-        const res =
-          await axios.patch(
-            "http://localhost:2000/admin-api/users",
-            {
-              userId,
-              isUserActive:
-                newStatus,
-            },
-            {
-              withCredentials: true,
-            }
-          );
+    try {
+      const res = await axios.patch(
+        "https://capstone-lq6s.onrender.com/admin-api/users",
+        {
+          userId,
+          isUserActive: newStatus,
+        },
+        {
+          withCredentials: true,
+        },
+      );
 
-        if (res.status === 201) {
-          setUsers((prev) =>
-            prev.map((u) =>
-              u._id === userId
-                ? {
-                    ...u,
-                    isUserActive:
-                      newStatus,
-                  }
-                : u
-            )
-          );
-        }
-      } catch (err) {
-        alert(
-          err.response?.data
-            ?.message ||
-            "Failed to update status"
+      if (res.status === 201) {
+        setUsers((prev) =>
+          prev.map((u) =>
+            u._id === userId
+              ? {
+                  ...u,
+                  isUserActive: newStatus,
+                }
+              : u,
+          ),
         );
       }
-    };
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to update status");
+    }
+  };
 
   // LOADING
   if (loading) {
@@ -118,18 +86,14 @@ function UserList() {
   // ERROR
   if (error) {
     return (
-      <div className="text-center py-10 text-red-500 font-medium">
-        {error}
-      </div>
+      <div className="text-center py-10 text-red-500 font-medium">{error}</div>
     );
   }
 
   // EMPTY
   if (users.length === 0) {
     return (
-      <div className="text-center py-16 text-gray-400">
-        No users found.
-      </div>
+      <div className="text-center py-16 text-gray-400">No users found.</div>
     );
   }
 
@@ -148,20 +112,14 @@ function UserList() {
       {/* HEADER */}
       <div className="bg-gradient-to-r from-blue-600 to-cyan-500 px-8 py-6 text-white">
         <div className="flex items-center gap-3">
-          
           <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur-lg">
             <Users size={28} />
           </div>
 
           <div>
-            <h2 className="text-3xl font-bold">
-              Users
-            </h2>
+            <h2 className="text-3xl font-bold">Users</h2>
 
-            <p className="opacity-90 text-sm mt-1">
-              Manage all platform
-              users
-            </p>
+            <p className="opacity-90 text-sm mt-1">Manage all platform users</p>
           </div>
         </div>
       </div>
@@ -169,24 +127,15 @@ function UserList() {
       {/* TABLE */}
       <div className="overflow-x-auto">
         <table className="w-full">
-          
           <thead className="bg-slate-100 text-gray-700">
             <tr>
-              <th className="text-left px-6 py-4 font-semibold">
-                User
-              </th>
+              <th className="text-left px-6 py-4 font-semibold">User</th>
 
-              <th className="text-left px-6 py-4 font-semibold">
-                Email
-              </th>
+              <th className="text-left px-6 py-4 font-semibold">Email</th>
 
-              <th className="text-left px-6 py-4 font-semibold">
-                Status
-              </th>
+              <th className="text-left px-6 py-4 font-semibold">Status</th>
 
-              <th className="text-center px-6 py-4 font-semibold">
-                Action
-              </th>
+              <th className="text-center px-6 py-4 font-semibold">Action</th>
             </tr>
           </thead>
 
@@ -208,20 +157,15 @@ function UserList() {
                   {/* USER */}
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-4">
-                      
                       {user.profileImageUrl ? (
                         <img
-                          src={
-                            user.profileImageUrl
-                          }
+                          src={user.profileImageUrl}
                           alt=""
                           className="w-12 h-12 rounded-full object-cover"
                         />
                       ) : (
                         <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 flex items-center justify-center text-white font-bold">
-                          {user.firstName
-                            ?.charAt(0)
-                            .toUpperCase()}
+                          {user.firstName?.charAt(0).toUpperCase()}
                         </div>
                       )}
 
@@ -231,12 +175,7 @@ function UserList() {
                         </h3>
 
                         <p className="text-sm text-gray-400">
-                          User ID :
-                          {" "}
-                          {user._id.slice(
-                            0,
-                            8
-                          )}
+                          User ID : {user._id.slice(0, 8)}
                         </p>
                       </div>
                     </div>
@@ -283,10 +222,7 @@ function UserList() {
                         scale: 0.96,
                       }}
                       onClick={() =>
-                        toggleUserStatus(
-                          user._id,
-                          user.isUserActive
-                        )
+                        toggleUserStatus(user._id, user.isUserActive)
                       }
                       className={`px-5 py-2.5 rounded-2xl text-sm font-semibold text-white shadow-lg transition ${
                         user.isUserActive
@@ -294,9 +230,7 @@ function UserList() {
                           : "bg-gradient-to-r from-green-500 to-emerald-500"
                       }`}
                     >
-                      {user.isUserActive
-                        ? "Block"
-                        : "Activate"}
+                      {user.isUserActive ? "Block" : "Activate"}
                     </motion.button>
                   </td>
                 </motion.tr>

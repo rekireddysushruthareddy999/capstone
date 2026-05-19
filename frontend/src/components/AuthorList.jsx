@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
-import {
-  ShieldCheck,
-  ShieldX,
-  Mail,
-  User,
-} from "lucide-react";
+import { ShieldCheck, ShieldX, Mail, User } from "lucide-react";
 
 function AuthorList() {
   const [authors, setAuthors] = useState([]);
@@ -19,20 +14,17 @@ function AuthorList() {
 
       try {
         const res = await axios.get(
-          "http://localhost:2000/admin-api/users/author",
+          "https://capstone-lq6s.onrender.com/admin-api/users/author",
           {
             withCredentials: true,
-          }
+          },
         );
 
         if (res.status === 200) {
           setAuthors(res.data.payload);
         }
       } catch (err) {
-        setError(
-          err.response?.data?.message ||
-            "Failed to fetch authors"
-        );
+        setError(err.response?.data?.message || "Failed to fetch authors");
       } finally {
         setLoading(false);
       }
@@ -41,22 +33,19 @@ function AuthorList() {
     getAuthors();
   }, []);
 
-  const toggleAuthorStatus = async (
-    authorId,
-    currentStatus
-  ) => {
+  const toggleAuthorStatus = async (authorId, currentStatus) => {
     const newStatus = !currentStatus;
 
     try {
       const res = await axios.patch(
-        "http://localhost:2000/admin-api/users",
+        "https://capstone-lq6s.onrender.com/admin-api/users",
         {
           userId: authorId,
           isUserActive: newStatus,
         },
         {
           withCredentials: true,
-        }
+        },
       );
 
       if (res.status === 201) {
@@ -67,15 +56,12 @@ function AuthorList() {
                   ...author,
                   isUserActive: newStatus,
                 }
-              : author
-          )
+              : author,
+          ),
         );
       }
     } catch (err) {
-      alert(
-        err.response?.data?.message ||
-          "Failed to update status"
-      );
+      alert(err.response?.data?.message || "Failed to update status");
     }
   };
 
@@ -88,19 +74,11 @@ function AuthorList() {
   }
 
   if (error) {
-    return (
-      <p className="text-center text-red-500 font-medium">
-        {error}
-      </p>
-    );
+    return <p className="text-center text-red-500 font-medium">{error}</p>;
   }
 
   if (authors.length === 0) {
-    return (
-      <p className="text-center text-gray-400 py-10">
-        No authors found
-      </p>
-    );
+    return <p className="text-center text-gray-400 py-10">No authors found</p>;
   }
 
   return (
@@ -113,9 +91,7 @@ function AuthorList() {
         >
           {/* Top */}
           <div className="flex items-start justify-between">
-            
             <div className="flex items-center gap-4">
-              
               {/* Avatar */}
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 flex items-center justify-center text-white text-xl font-bold shadow-lg">
                 {author.firstName?.charAt(0)}
@@ -154,10 +130,7 @@ function AuthorList() {
           <div className="mt-6 flex justify-end">
             <button
               onClick={() =>
-                toggleAuthorStatus(
-                  author._id,
-                  author.isUserActive
-                )
+                toggleAuthorStatus(author._id, author.isUserActive)
               }
               className={`px-5 py-2.5 rounded-2xl text-sm font-medium text-white shadow-lg transition hover:scale-105 ${
                 author.isUserActive
@@ -165,9 +138,7 @@ function AuthorList() {
                   : "bg-gradient-to-r from-green-500 to-emerald-500"
               }`}
             >
-              {author.isUserActive
-                ? "Block Author"
-                : "Activate Author"}
+              {author.isUserActive ? "Block Author" : "Activate Author"}
             </button>
           </div>
         </motion.div>

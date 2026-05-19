@@ -5,12 +5,7 @@ import { useEffect, useState } from "react";
 import UserList from "./UserList";
 import AuthorList from "./AuthorList";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Users,
-  PenSquare,
-  ArrowRight,
-  Clock,
-} from "lucide-react";
+import { Users, PenSquare, ArrowRight, Clock } from "lucide-react";
 
 function Spinner() {
   return (
@@ -91,8 +86,7 @@ function Home() {
   const navigate = useNavigate();
 
   const isAdmin =
-    currentUser?.role === "ADMIN" ||
-    currentUser?.role === "admin";
+    currentUser?.role === "ADMIN" || currentUser?.role === "admin";
 
   useEffect(() => {
     if (isAdmin) return;
@@ -102,18 +96,15 @@ function Home() {
 
       try {
         const res = await axios.get(
-          "http://localhost:2000/user-api/articles",
-          { withCredentials: true }
+          "https://capstone-lq6s.onrender.com/user-api/articles",
+          { withCredentials: true },
         );
 
         if (res.status === 200) {
           setArticles(res.data.payload ?? []);
         }
       } catch (err) {
-        setError(
-          err.response?.data?.error ||
-            "Something went wrong"
-        );
+        setError(err.response?.data?.error || "Something went wrong");
       } finally {
         setLoading(false);
       }
@@ -141,9 +132,7 @@ function Home() {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-cyan-50">
-        <p className="text-red-500 text-lg">
-          {error}
-        </p>
+        <p className="text-red-500 text-lg">{error}</p>
       </div>
     );
   }
@@ -162,9 +151,7 @@ function Home() {
               Admin Dashboard
             </h1>
 
-            <p className="text-gray-500 mt-2">
-              Manage users and authors
-            </p>
+            <p className="text-gray-500 mt-2">Manage users and authors</p>
           </div>
 
           <div className="flex gap-3 mb-6">
@@ -192,11 +179,7 @@ function Home() {
               transition={{ duration: 0.3 }}
               className="bg-white/70 backdrop-blur-xl border border-white rounded-3xl shadow-xl p-6"
             >
-              {activeTab === "users" ? (
-                <UserList />
-              ) : (
-                <AuthorList />
-              )}
+              {activeTab === "users" ? <UserList /> : <AuthorList />}
             </motion.div>
           </AnimatePresence>
         </motion.div>
@@ -221,15 +204,14 @@ function Home() {
           </h1>
 
           <p className="text-gray-500 mt-4 max-w-lg">
-            Explore trending stories and insights from writers around the platform.
+            Explore trending stories and insights from writers around the
+            platform.
           </p>
         </div>
 
         {articles.length === 0 ? (
           <div className="flex items-center justify-center py-24">
-            <p className="text-gray-400 text-lg">
-              No Articles Found
-            </p>
+            <p className="text-gray-400 text-lg">No Articles Found</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

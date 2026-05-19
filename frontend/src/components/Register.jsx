@@ -44,9 +44,9 @@ function Register() {
       setLoading(true);
 
       const res = await axios.post(
-        `http://localhost:2000/common-api/users`,
+        `https://capstone-lq6s.onrender.com/common-api/users`,
         formData,
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       if (res.status === 201) {
@@ -131,9 +131,7 @@ function Register() {
             </div>
 
             {errors.role && (
-              <p className={`${errorClass} mt-2`}>
-                {errors.role.message}
-              </p>
+              <p className={`${errorClass} mt-2`}>{errors.role.message}</p>
             )}
           </div>
 
@@ -151,9 +149,7 @@ function Register() {
               />
 
               {errors.firstName && (
-                <p className={errorClass}>
-                  {errors.firstName.message}
-                </p>
+                <p className={errorClass}>{errors.firstName.message}</p>
               )}
             </div>
 
@@ -168,9 +164,7 @@ function Register() {
               />
 
               {errors.lastName && (
-                <p className={errorClass}>
-                  {errors.lastName.message}
-                </p>
+                <p className={errorClass}>{errors.lastName.message}</p>
               )}
             </div>
           </div>
@@ -188,9 +182,7 @@ function Register() {
             />
 
             {errors.email && (
-              <p className={errorClass}>
-                {errors.email.message}
-              </p>
+              <p className={errorClass}>{errors.email.message}</p>
             )}
           </div>
 
@@ -207,9 +199,7 @@ function Register() {
             />
 
             {errors.password && (
-              <p className={errorClass}>
-                {errors.password.message}
-              </p>
+              <p className={errorClass}>{errors.password.message}</p>
             )}
           </div>
 
