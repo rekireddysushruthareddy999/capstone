@@ -1,17 +1,52 @@
 import { useAuth } from "../store/authStore";
-import { Navigate } from "react-router";
+import {
+  Navigate,
+  useLocation,
+} from "react-router";
 
-function ProtectedRoute({ children, allowedRoles }) {
-  const { currentUser } = useAuth();
+function ProtectedRoute({
+  children,
+  allowedRoles,
+}) {
+  const currentUser = useAuth(
+    (state) => state.currentUser
+  );
 
-  if (!currentUser) {
-    return <Navigate to="/login" />;
+  const isAuthenticated = useAuth(
+    (state) => state.isAuthenticated
+  );
+
+  const location = useLocation();
+
+  // NOT LOGGED IN
+  if (!isAuthenticated || !currentUser) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{
+          from: location,
+        }}
+      />
+    );
   }
 
-  if (!allowedRoles.includes(currentUser.role)) {
-    return <Navigate to="/unauthorized" />;
+  // ROLE NOT ALLOWED
+  if (
+    allowedRoles &&
+    !allowedRoles.includes(
+      currentUser.role
+    )
+  ) {
+    return (
+      <Navigate
+        to="/unauthorized"
+        replace
+      />
+    );
   }
 
+  // ACCESS GRANTED
   return children;
 }
 

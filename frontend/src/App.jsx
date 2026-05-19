@@ -17,7 +17,7 @@ import UserList from "./components/UserList.jsx";
 import AdminProfile from "./components/AdminProfile.jsx"
 import axios from "axios";
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "https://capstone-lq6s.onrender.com";
+axios.defaults.baseURL = "http://localhost:2000";
 
 function App() {
   const routerObj = createBrowserRouter([

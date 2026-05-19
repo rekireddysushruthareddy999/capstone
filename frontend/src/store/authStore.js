@@ -18,7 +18,7 @@ export const useAuth = create((set) => ({
       });
       //make api call
       let res = await axios.post(
-        `https://capstone-lq6s.onrender.com/common-api/users/login`,
+        `http://localhost:2000/common-api/users/login`,
         userCred,
         { withCredentials: true },
       );
@@ -50,7 +50,7 @@ export const useAuth = create((set) => ({
       //set loading state
       //make logout api req
       let res = await axios.get(
-        `https://capstone-lq6s.onrender.com/common-api/users/logout`,
+        `http://localhost:2000/common-api/users/logout`,
         { withCredentials: true },
       );
       //update state
@@ -76,7 +76,7 @@ export const useAuth = create((set) => ({
     try {
       set({ loading: true });
       const res = await axios.get(
-        `https://capstone-lq6s.onrender.com/common-api/check-auth`,
+        `http://localhost:2000/common-api/check-auth`,
         { withCredentials: true },
       );
 
