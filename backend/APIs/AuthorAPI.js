@@ -35,20 +35,36 @@ authorApp.put("/articles",verifyToken("AUTHOR"),async(req,res)=>{
         res.status(200).json({message:"Article Modified.",payload:newArticle})
 })
 
-//patch
-authorApp.patch("/articles",verifyToken("AUTHOR"),async(req,res)=>{
-const authortokenid =req.user?._id
-const {articleId,isArticleActive} = req.body
-const articleofdb = await ArticleModel.findOne({_id:articleId,author:authortokenid})
-if(isArticleActive === articleofdb.isArticleActive){
-        return res.status(400).json({message:"No change in status"})
+authorApp.patch("/articles/:articleId", verifyToken("AUTHOR"), async (req, res) => {
+
+    const authortokenid = req.user?._id
+
+    const { articleId } = req.params
+    const { isArticleActive } = req.body
+
+    const articleofdb = await ArticleModel.findOne({
+        _id: articleId,
+        author: authortokenid
+    })
+
+    if (!articleofdb) {
+        return res.status(404).json({ message: "Article not found" })
     }
+
+    if (isArticleActive === articleofdb.isArticleActive) {
+        return res.status(400).json({ message: "No change in status" })
+    }
+
     const result = await ArticleModel.findByIdAndUpdate(
         articleId,
-        {$set:{isArticleActive:isArticleActive}},
-        {new:true}
+        { $set: { isArticleActive } },
+        { new: true }
     )
-    res.status(200).json({message:"Article status updated", payload:result})
+
+    res.status(200).json({
+        message: "Article status updated",
+        payload: result
+    })
 })
 
 //to delete comment
